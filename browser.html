@@ -1,22 +1,35 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html> <!-- xmlns="http://www.w3.org/1999/xhtml"-->
 <head>
   <title>TPeut Demo Browser</title>
   <link rel="stylesheet" href="reset-fonts-grids.css" type="text/css"/>
+  <link rel="stylesheet" type="text/css" href="../ext-2.3.0/resources/css/ext-all.css"/>
+  <link rel="stylesheet" type="text/css" href="../ext-2.3.0/examples/shared/examples.css"/>
   <link rel="stylesheet" href="tpeut.css" type="text/css"/>
-  <script src="ol/OpenLayers.js"></script>
-  <script src="StrategySVG.js"></script>
-  <script src="ProtocolSVG.js"></script>
-  <script src="LayerSVG.js"></script>
-  <script src="RendererStaticSVG.js"></script>
-  <script src="tpeut.js"></script>
-  <script src="jquery-1.3.2.min.js"></script>
+
+  <script type="text/javascript" src="jquery-1.3.2.min.js"></script>
+  <script type="text/javascript" src="../ext-2.3.0/adapter/jquery/ext-jquery-adapter.js"></script>
+  <!--script type="text/javascript" src="../ext-2.3.0/ext-all-debug.js"></script-->
+  <script type="text/javascript" src="../ext-2.3.0/ext-all.js"></script>
+  <!--script type="text/javascript" src="../OpenLayers-2.8/lib/OpenLayers.js"></script-->
+  <script type="text/javascript" src="http://openlayers.org/api/2.8/OpenLayers.js"></script>
+  <script type="text/javascript" src="StrategySVG.js"></script>
+  <script type="text/javascript" src="ProtocolSVG.js"></script>
+  <script type="text/javascript" src="LayerSVG.js"></script>
+  <script type="text/javascript" src="RendererStaticSVG.js"></script>
+  <script type="text/javascript" src="TPeutPermalink.js"></script>
+  <script type="text/javascript" src="../GeoExt/lib/GeoExt.js"></script>
+  <script type="text/javascript" src="TPeutOverlayOpacitySlider.js"></script>
+  <script type="text/javascript" src="tpeut.js"></script>  
 </head>
 
-<body onload="initTPeut()">
-  <div id="doc2" class="yui-t4">
+<body>
+  <div id="doc2" class="yui-t2">
     <div id="hd" role="banner">
-      <h1>TPeut Demo Browser</h1>
+      <h1>Tabula Peutingeriana Codex Vindobonensis 324</h1>
+      <div style="float:right">
+        <a href="" id="permalink">Permalink</a>
+      </div>
     </div><!-- end #hd -->
     <div id="bd" role="main">
       <div id="yui-main">
@@ -26,10 +39,20 @@
 	        </div>
         </div>
 	    </div>
-      <div id="right" class="yui-b">
-        <h3>Select section</h3>
-        <form id="select-section-form">
-          <select id="field-section" onchange='moveToSection($("#field-section").val())'>
+      <div id="left" class="yui-b">
+        <div id="tree-div"></div>
+        <div id="slider-space" style="margin-top:1em">
+          <div id="overlay-slider-space">
+            <div id="overlay-slider"></div>
+            <label for="overlay-slider">Overlay opacity</label>
+          </div>
+          <div id="background-slider-space">
+            <div id="imagery-slider"></div>
+            <label for="imagery-slider">Map opacity</label>
+          </div>
+        </div>
+        <form id="select-segment-form" style="margin-top:1em">
+          <select id="field-segment" onchange='moveToSection(map, $("#field-segment").val())'>
             <option>1</option>
             <option>2</option>
             <option>3</option>
@@ -42,11 +65,11 @@
             <option>10</option>
             <option>11</option>
           </select>
+          <label for="field-segment">Select segment</label>
         </form>
-        <p><a href="" id="permalink">Permalink</a></p>
       </div>
 	  </div><!-- end #bd -->
-   <div id="ft" role="contentinfo"><p>Footer</p></div>
+   <div id="ft" role="contentinfo">Copyright &copy; Ancient World Mapping Center and Institute for the Study of the Ancient World. Sharing and remixing permitted under terms of the Creative Commons Attribution 3.0 License (cc-by).</div>
   </div><!-- end #doc -->
 </body>
 </html>

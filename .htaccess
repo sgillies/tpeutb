@@ -1,2 +1,3 @@
-AddType application/xhtml+xml .html
+# AddType application/xhtml+xml .html
+AddType text/html .html
 
