@@ -249,7 +249,7 @@ Ext.onReady(function() {
 
   var tree = new Ext.tree.TreePanel({
     width: 180,
-    height: 400,
+    height: 375,
     renderTo: "tree-div",
     autoScroll:true,
     animate:true,

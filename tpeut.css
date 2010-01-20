@@ -1,14 +1,44 @@
-body {
-  margin-top: 1em;
-  margin-bottom: 5em;
+@import url("reset-fonts-grids.css");
+@import url("../ext-2.3.0/resources/css/ext-all.css");
+
+html {
+  font-size: 62.5%;
 }
 
+body {  
+  margin-top: 2em;
+  margin-bottom: 5em;
+  background-color: #fff;
+  font-family: 'Palatino Linotype', 'Times New Roman', Times, serif;
+  font-size: 1.5em;
+  color: #333;
+}
+
+.x-panel-body {
+  background-color: #ccc;
+  border: 1px solid #ccc
+}
+
+.x-tree-root-ct {
+  margin-top: 0.25em;
+  margin-left: 0.25em;
+}
+
+h1 {
+  font-size: x-large;
+  letter-spacing: 0.15em;
+}
+      
 h1, h2, h3 {
   margin-bottom: 0.5em;
 }
 
 p {
   margin-top: 0.5em;
+}
+
+a:link, a:visited {
+  color:#333; 
 }
 
 #hd {
@@ -22,10 +52,14 @@ p {
   margin-bottom: 1em;
 }
 
-#right {
-}
-
 #ft {
   margin-top: 2em;
 }
 
+#overlay-slider-space {
+  margin-bottom: 0.5em;
+}
+
+#background-slider-space {
+  margin-bottom: 0.5em;
+}
