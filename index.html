@@ -19,33 +19,44 @@
   <script type="text/javascript" src="tpeut.js"></script>  
 </head>
 
-<body>
+<body onload="parseViewParams()">
   
-  <div id="doc2" class="yui-t2">
+  <div id="container">
     
-    <div id="hd" role="banner">
+    <div id="hd">
       <h1>TABULA PEUTINGERIANA CODEX VINDOBONENSIS 324</h1>
     </div><!-- end #hd -->
 
-    <div id="bd" role="main">
+    <div id="bd">
       
-      <div id="yui-main">
-	      <div class="yui-b">
-          <div class="yui-g">
-            <p>Blah, blah.</p>
-	        </div>
+      <div id="left">
+        <div class="sectionBanner">
+          <h2>Intro</h2>
+        </div>
+        <div class="sectionContent">
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
         </div>
 	    </div>
+
+      <div id="right">
+        <div class="sectionBanner">
+          <h2>View</h2>
+        </div>
+        <div class="sectionContent">
+        <p>Launch Viewer in <a href="#" onclick="javascript:launchViewer(800, 600)">800 x 600</a> or <a href="#" onclick="javascript:launchViewer(1024, 768)">1024 x 768</a></p>
+        </div>
+      </div>
       
 	  </div><!-- end #bd -->
 
-    <div id="ft" role="contentinfo">
+    <div id="ft">
       <p>Copyright &copy; Ancient World Mapping Center and Institute for the Study of the Ancient World. Sharing and remixing permitted under terms of the Creative Commons Attribution 3.0 License (cc-by).</p>
     </div>
 
   </div><!-- end #doc -->
 
   <!-- Following div is content for the Ext UI -->
+  <div id="map-contents-wrapper">
   <div id="map-contents">
     <div id="tree-div"></div>
     <div id="slider-space" style="margin-top:1em">
@@ -79,6 +90,7 @@
     <div  style="margin-top:1em">
       <a href="" id="permalink">Permanent link to current view</a>
     </div>
+  </div>
   </div>
 
 </body>

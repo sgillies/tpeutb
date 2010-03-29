@@ -1,35 +1,48 @@
 Ext.BLANK_IMAGE_URL = '../ext-2.3.0/resources/images/default/s.gif';
 
+var params;
 var layers, map, base, background, s1, s2, panel1, slider;
-var mapPanel;
+var mapwin = null;
+var mapPanel = null;
+var tree = null;
+
 var overlays = [
-  ["Lines", "data/all-gridlines.svg"],
+  ["Framework", "data/all-gridlines.svg"],
   ["Labels", "data/all-gridnumbers.svg"],
-  ["Lines", "data/all-shoreline.svg"],
-  ["Numbers", "data/all-islandnumbers.svg"],
+
+  ["Coastline", "data/all-shoreline.svg"],
+
+  ["Island numbers", "data/all-islandnumbers.svg"],
+
   ["Areas", "data/all-lakesoutline.svg"],
-  ["Numbers", "data/all-lakenumbers.svg"],
-  ["Lines", "data/all-mountainsnofill.svg"],  // Mountains
+  ["Lake and marsh numbers", "data/all-lakenumbers.svg"],
+
+  ["Brown outline", "data/all-mountainsnofill.svg"],  // Mountains
+  ["Brown fill", "data/all-mountainsbrown.svg"], // Mountains
+  ["Pink fill", "data/all-mountainspink.svg"],
+  ["Red red", "data/all-mountainsred.svg"],
   ["Numbers", "data/all-mountainnumbers.svg"],
-  ["Brown", "data/all-mountainsbrown.svg"], // Mountains
-  ["Pink", "data/all-mountainspink.svg"],
-  ["Red", "data/all-mountainsred.svg"],
+
   ["Names", "data/all-namesislandswater.svg"], // Open Water
+
   ["Red", "data/all-namespeoplesregionsmountainsred.svg"], // Peoples, Regions
   ["Black", "data/all-namespeoplesregionsmountainsblack.svg"],
-  ["Lines", "data/all-riversoutline.svg"],
-  ["Decorative", "data/all-riversdecorative.svg"],
-  ["Partially erased", "data/all-riverspartiallyerased.svg"],
-  ["Flow", "data/all-riverflow.svg"],
+  
+  ["River courses", "data/all-riversoutline.svg"],
+  ["Restoration of partial erasures", "data/all-riverspartiallyerased.svg"],
+  ["Supplementary linework", "data/all-riversdecorative.svg"],
+  ["Flow direction arrows", "data/all-riverflow.svg"],
   ["Numbers", "data/all-rivernumbers.svg"], // Rivers
-  ["Lines", "data/all-routesoutline.svg"],
-  ["Restored lines", "data/all-routesrestoriation.svg"], // Routes
-  ["No distance", "data/all-routesnodistance.svg"],
-  ["No start marked", "data/all-routesnostart.svg"],
-  ["Double stretches", "data/all-routestwoasone.svg"], // Other routes
-  ["Lines", "data/all-unnamedroutesoutline.svg"],
-  ["Numbers", "data/all-unnamedroutenumbers.svg"], // Unnamed routes
-  ["Numbers", "data/all-isolatedsymbols.svg"], // Isolated symbols
+  
+  ["Route linework", "data/all-routesoutline.svg"],
+  ["Conjectural restoration of missing linework", "data/all-routesrestoriation.svg"], // Routes
+  ["Stretches with no distance figure", "data/all-routesnodistance.svg"],
+  ["Stretches with no start marked", "data/all-routesnostart.svg"],
+  ["One stretch drawn as two or more", "data/all-routestwoasone.svg"], // Other routes
+  ["Unnamed route stretches", "data/all-unnamedroutesoutline.svg"],
+  ["Unnamed route stretch numbers", "data/all-unnamedroutenumbers.svg"], // Unnamed routes
+
+  ["Numbers of isolated unnamed symbols", "data/all-isolatedsymbols.svg"], // Isolated symbols
   ];
 
 function makeOverlayLayer(title, url) {
@@ -69,9 +82,12 @@ function moveToSection(map, n) {
                           ));
 }
 
-function initView(map) {
+function parseViewParams() {
+  params = OpenLayers.Util.getParameters();
+}
+
+function initView(map, params) {
   var xy, center, z;
-  var params = OpenLayers.Util.getParameters();
   if (params.z && params.l && params.xy) {
     // layers
     if (params.l.length == map.layers.length) { 
@@ -104,8 +120,9 @@ function initView(map) {
   map.setCenter(center, z, false, false);
 }
 
-Ext.onReady(function() {
+/*Ext.onReady(function() {*/
 
+function launchViewer(w, h) {
   map = new OpenLayers.Map('map', {
               units: 'cm',
               maxExtent: new OpenLayers.Bounds(0.0, 0.0, 681.133, 60.163)
@@ -154,6 +171,42 @@ Ext.onReady(function() {
   map.addControl(new OpenLayers.Control.MousePosition());
   map.addControl(new OpenLayers.Control.Scale());
 
+  // Empty rendered-to elements
+  $('#tree-div').empty();
+  $('#imagery-slider').empty();
+  $('#overlay-slider').empty();
+
+  // create Ext window including a map panel
+  mapwin = new Ext.Window({
+        layout: "border",
+        resizable: true,
+        maximizable: true,
+        constrain: true,
+        closeAction: 'hide',
+        title: "Map Viewer",
+        width: w,
+        height: h,
+        x: (document.width-w)/2,
+        y: (document.height-h)/2,
+        items: [
+            { collapsible: true,
+              // collapsed: true,
+              title: 'Options',
+              region:'west',
+              contentEl: 'map-contents',
+              width: 320,
+              }, 
+            {
+              xtype: "gx_mappanel",
+              region: "center",
+              map: map
+            }
+        ]
+    });
+    mapwin.show();
+
+  mapPanel = mapwin.items.get(1);
+
   var k = 4; // first overlay index
   
   var mapstore = new GeoExt.data.LayerStore({
@@ -176,12 +229,8 @@ Ext.onReady(function() {
     layers: map.layers.slice(k+4, k+6)
     });
 
-  var mountainsastore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+6, k+8)
-    });
-
-  var mountainsbstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+8, k+11)
+  var mountainstore = new GeoExt.data.LayerStore({
+    layers: map.layers.slice(k+6, k+11)
     });
 
   var openwaterstore = new GeoExt.data.LayerStore({
@@ -192,126 +241,26 @@ Ext.onReady(function() {
     layers: map.layers.slice(k+12, k+14)
     });
   
-  var riversastore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+14, k+16)
+  var riverstore = new GeoExt.data.LayerStore({
+    layers: map.layers.slice(k+14, k+19)
     });
   
-  var riversbstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+16, k+17)
-    });
-  
-  var riverscstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+17, k+19)
-    });
-  
-  var routesastore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+19, k+21)
-    });
-  
-  var routesbstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+21, k+24)
-    });
-  
-  var unnamedroutesstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+24, k+26)
+  var routestore = new GeoExt.data.LayerStore({
+    layers: map.layers.slice(k+19, k+26)
     });
   
   var isolatedsymbolsstore = new GeoExt.data.LayerStore({
     layers: map.layers.slice(k+26, k+27)
     });
   
-  // create a map panel with an embedded slider
-  /*panel1 = new GeoExt.MapPanel({
-    header: false,
-    renderTo: "map",
-    height: 545,
-    width: 770,
-    map: map,
-  });*/
-
-/*
-  new Ext.Viewport({
-layout:'border',
-defaults: {
-    collapsible: true,
-    split: true,
-    // bodyStyle: 'padding:15px'
-},
-items: [{
-    title: 'Header',
-    contentEl: 'hd',
-    region: 'north',
-    height: 150,
-    minSize: 75,
-    maxSize: 250,
-    cmargins: '5 0 0 0'
-}, {
-    title: 'Footer',
-    contentEl: 'ft',
-    region: 'south',
-    height: 150,
-    minSize: 75,
-    maxSize: 250,
-    cmargins: '5 0 0 0'
-},{
-    title: 'Navigation',
-    region:'west',
-    contentEl: 'left',
-    margins: '5 0 0 0',
-    cmargins: '5 5 0 0',
-    width: 175,
-    minSize: 100,
-    maxSize: 250
-},{
-    title: 'Main Content',
-    collapsible: false,
-    region:'center',
-    // margins: '5 0 0 0',
-    xtype: "gx_mappanel",
-    id: "mappanel",
-    map: map,
-    layers: map.layers,
-    extent: map.mapExtent
-}]
-    });
-
-  mapPanel = Ext.getCmp('mappanel');
-  */
-
-  // create Ext window including a map panel
-    var mapwin = new Ext.Window({
-        layout: "border",
-        //title: "Map",
-        //closeAction: "hide",
-        width: 720,
-        height: 600,
-        x: 50,
-        y: 100,
-        items: [{
-    collapsible: true,
-    title: 'Navigation',
-    region:'west',
-    contentEl: 'map-contents',
-    //margins: '5 0 0 0',
-    //cmargins: '5 5 0 0',
-    width: 200,
-    // minSize: 100,
-    //maxSize: 250
-}, {
-            xtype: "gx_mappanel",
-            region: "center",
-            map: map
-        }]
-    });
-    mapwin.show();
-
-  mapPanel = mapwin.items.get(1);
-
   backgroundSlider = new GeoExt.TPeutOverlayOpacitySlider({
       layers: map.layers.slice(1, k),
       aggressive: true, 
-      width: 175,
-      isFormField: true,
+      width: 280,
+      minValue: 0,
+      maxValue: 100,
+      increment: 10,
+      value: 100,
       fieldLabel: "imagery-opacity",
       renderTo: "imagery-slider"
   });
@@ -320,14 +269,17 @@ items: [{
   overlaySlider = new GeoExt.TPeutOverlayOpacitySlider({
       layers: map.layers.slice(k),
       aggressive: true, 
-      width: 175,
-      isFormField: true,
+      width: 280,
+      minValue: 0,
+      maxValue: 100,
+      increment: 10,
+      value: 100,
       fieldLabel: "overlay-opacity",
       renderTo: "overlay-slider"
   });
 
-  var tree = new Ext.tree.TreePanel({
-    width: 180,
+  tree = new Ext.tree.TreePanel({
+    width: 320,
     height: 375,
     renderTo: "tree-div",
     autoScroll:true,
@@ -336,7 +288,6 @@ items: [{
     containerScroll: true,
     rootVisible: true,
     frame: false,
-
     loader: new Ext.tree.TreeLoader({
       // applyLoader has to be set to false to not interfer with loaders
       // of nodes further down the tree hierarchy
@@ -346,75 +297,49 @@ items: [{
             expanded: true,
             children: [
               { // isolated symbols
-                text: "Isolated symbols",
-                nodeType: "gx_layercontainer",
-                layerStore: isolatedsymbolsstore,
+                text: "Symbols",
+                nodeType: "gx_layer",
+                layer: map.layers[30],
                 }, 
-              { // unnamed routes
-                text: "Unnamed routes",
+              { // routes
+                text: "Routes",
                 nodeType: "gx_layercontainer",
-                layerStore: unnamedroutesstore,
+                layerStore: routestore,
                 }, 
-              { // routes b
-                text: "Routes (b)",
+              { // rivers
+                text: "Rivers",
                 nodeType: "gx_layercontainer",
-                layerStore: routesbstore,
-                }, 
-              { // routes a
-                text: "Routes (a)",
-                nodeType: "gx_layercontainer",
-                layerStore: routesastore,
-                }, 
-              { // rivers c
-                text: "Rivers (c)",
-                nodeType: "gx_layercontainer",
-                layerStore: riverscstore,
-                }, 
-              { // rivers b
-                text: "Rivers (b)",
-                nodeType: "gx_layercontainer",
-                layerStore: riversbstore,
-                }, 
-              { // rivers a
-                text: "Rivers (a)",
-                nodeType: "gx_layercontainer",
-                layerStore: riversastore,
+                layerStore: riverstore,
                 }, 
               { // peoples, regions
-                text: "Peoples, regions",
+                text: "Names of Mountains, Peoples, Regions, display capitals",
                 nodeType: "gx_layercontainer",
                 layerStore: peoplesregionsstore,
                 },
               { // water
-                text: "Open water",
-                nodeType: "gx_layercontainer",
-                layerStore: openwaterstore,
+                text: "Open water, lettering",
+                nodeType: "gx_layer",
+                layer: map.layers[15],
                 },
-              { // mountains b
-                text: "Mountains (b)",
+              { // mountains
+                text: "Mountains",
                 nodeType: "gx_layercontainer",
-                layerStore: mountainsbstore,
+                layerStore: mountainstore,
                 },
-              { // mountains a
-                text: "Mountains (a)",
-                nodeType: "gx_layercontainer",
-                layerStore: mountainsastore,
-                },
-
               { // lakes
                 text: "Lakes",
                 nodeType: "gx_layercontainer",
                 layerStore: lakesstore,
                 },
               { // islands
-                text: "Islands",
-                nodeType: "gx_layercontainer",
-                layerStore: islandsstore,
+                text: "Island numbers",
+                nodeType: "gx_layer",
+                layer: map.layers[7],
                 }, 
               { // coast
-                text: "Coast",
-                nodeType: "gx_layercontainer",
-                layerStore: coaststore,
+                text: "Coastline",
+                nodeType: "gx_layer",
+                layer: map.layers[6],
                 }, 
               { // grid
                 text: "Grid",
@@ -438,7 +363,6 @@ items: [{
     });
 
   // initialize map view
-  initView(map);
+  initView(map, params);
 
-});
-
+};
