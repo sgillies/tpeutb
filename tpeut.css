@@ -3,25 +3,47 @@
 
 html {
   font-size: 62.5%;
+  height: 100%;
 }
 
 body {  
-  margin-top: 2em;
-  margin-bottom: 5em;
-  background-color: #fff;
+  /* margin-top: 2em; */
+  /* margin-bottom: 5em;*/
+  background-color: #333;
   font-family: 'Palatino Linotype', 'Times New Roman', Times, serif;
   font-size: 1.5em;
   color: #333;
+  height: 100%;
 }
 
-.x-panel-body {
-  background-color: #ccc;
-  border: 1px solid #ccc
+#doc2 {
+  position: relative;
+  min-height: 100%;
+  background-color: #fff;
 }
 
-.x-tree-root-ct {
-  margin-top: 0.25em;
-  margin-left: 0.25em;
+#hd {
+  width: 100%;
+  background-color: #003366;
+  border: solid 1px #fff;
+  color: #fff;
+  padding: 2em;
+}
+
+#bd {
+  width: 100%;
+  padding: 2em;
+  padding-bottom: 6em;
+}
+
+#ft {
+  position: absolute;
+  height: 6em;
+  width: 100%;
+  bottom: 0;
+  padding: 2em;
+  background-color: #99ccff;
+  border: solid 1px #fff;
 }
 
 h1 {
@@ -41,19 +63,8 @@ a:link, a:visited {
   color:#333; 
 }
 
-#hd {
-  margin-bottom: 1em;
-}
-
-#map {
-}
-
 #tree {
   margin-bottom: 1em;
-}
-
-#ft {
-  margin-top: 2em;
 }
 
 #overlay-slider-space {
@@ -63,3 +74,15 @@ a:link, a:visited {
 #background-slider-space {
   margin-bottom: 0.5em;
 }
+
+.x-panel-body {
+  background-color: #ccc;
+  border: 1px solid #ccc
+}
+
+.x-tree-root-ct {
+  margin-top: 0.25em;
+  margin-left: 0.25em;
+}
+
+

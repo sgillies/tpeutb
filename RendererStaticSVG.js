@@ -106,6 +106,7 @@ OpenLayers.Renderer.StaticSVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
             this.top = top;
         }
         var box = [extent.left, this.map.maxExtent.top - extent.top, this.map.size.w * resolution, this.map.size.h * resolution];
+        // var box = [extent.left, this.map.maxExtent.top - extent.top, mapPanel.el.getWidth() * resolution, mapPanel.el.getHeight() * resolution];
         var extentString = box.join(' ');
         this.rendererRoot.setAttributeNS(null, "viewBox", extentString);
         return true;

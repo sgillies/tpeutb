@@ -1,3 +1,4 @@
 # AddType application/xhtml+xml .html
 AddType text/html .html
+Options +FollowSymLinks
 

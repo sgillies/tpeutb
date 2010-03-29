@@ -1,6 +1,7 @@
 Ext.BLANK_IMAGE_URL = '../ext-2.3.0/resources/images/default/s.gif';
 
 var layers, map, base, background, s1, s2, panel1, slider;
+var mapPanel;
 var overlays = [
   ["Lines", "data/all-gridlines.svg"],
   ["Labels", "data/all-gridnumbers.svg"],
@@ -220,14 +221,92 @@ Ext.onReady(function() {
     });
   
   // create a map panel with an embedded slider
-  panel1 = new GeoExt.MapPanel({
+  /*panel1 = new GeoExt.MapPanel({
     header: false,
     renderTo: "map",
     height: 545,
     width: 770,
     map: map,
-  });
-  
+  });*/
+
+/*
+  new Ext.Viewport({
+layout:'border',
+defaults: {
+    collapsible: true,
+    split: true,
+    // bodyStyle: 'padding:15px'
+},
+items: [{
+    title: 'Header',
+    contentEl: 'hd',
+    region: 'north',
+    height: 150,
+    minSize: 75,
+    maxSize: 250,
+    cmargins: '5 0 0 0'
+}, {
+    title: 'Footer',
+    contentEl: 'ft',
+    region: 'south',
+    height: 150,
+    minSize: 75,
+    maxSize: 250,
+    cmargins: '5 0 0 0'
+},{
+    title: 'Navigation',
+    region:'west',
+    contentEl: 'left',
+    margins: '5 0 0 0',
+    cmargins: '5 5 0 0',
+    width: 175,
+    minSize: 100,
+    maxSize: 250
+},{
+    title: 'Main Content',
+    collapsible: false,
+    region:'center',
+    // margins: '5 0 0 0',
+    xtype: "gx_mappanel",
+    id: "mappanel",
+    map: map,
+    layers: map.layers,
+    extent: map.mapExtent
+}]
+    });
+
+  mapPanel = Ext.getCmp('mappanel');
+  */
+
+  // create Ext window including a map panel
+    var mapwin = new Ext.Window({
+        layout: "border",
+        //title: "Map",
+        //closeAction: "hide",
+        width: 720,
+        height: 600,
+        x: 50,
+        y: 100,
+        items: [{
+    collapsible: true,
+    title: 'Navigation',
+    region:'west',
+    contentEl: 'map-contents',
+    //margins: '5 0 0 0',
+    //cmargins: '5 5 0 0',
+    width: 200,
+    // minSize: 100,
+    //maxSize: 250
+}, {
+            xtype: "gx_mappanel",
+            region: "center",
+            map: map
+        }]
+    });
+    mapwin.show();
+
+  mapPanel = mapwin.items.get(1);
+
   backgroundSlider = new GeoExt.TPeutOverlayOpacitySlider({
       layers: map.layers.slice(1, k),
       aggressive: true, 
