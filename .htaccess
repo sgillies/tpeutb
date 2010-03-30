@@ -1,4 +1,3 @@
-# AddType application/xhtml+xml .html
-AddType text/html .html
 Options +FollowSymLinks
-
+AddType text/html .html
+AddCharset UTF-8 .html
