@@ -76,9 +76,18 @@ body {
   text-align: center;
 }
 
+a:link, a:visited {
+  color:#333; 
+}
+
 h1 {
   font-size: x-large;
   letter-spacing: 0.15em;
+}
+
+#hd a {
+  color: #fff; 
+  text-decoration: none;
 }
 
 h2 {

@@ -1,62 +1,52 @@
 Ext.BLANK_IMAGE_URL = '../ext-2.3.0/resources/images/default/s.gif';
 
-var params;
 var layers, map, base, background, s1, s2, panel1, slider;
-var mapwin = null;
-var mapPanel = null;
-var tree = null;
+var params, mapwin, mapPanel, tree;
+var stores = {};
+var tree_kids = [];
 
-var overlays = [
-  ["Framework", "data/all-gridlines.svg"],
-  ["Labels", "data/all-gridnumbers.svg"],
-
-  ["Coastline", "data/all-shoreline.svg"],
-
-  ["Island numbers", "data/all-islandnumbers.svg"],
-
-  ["Areas", "data/all-lakesoutline.svg"],
-  ["Lake and marsh numbers", "data/all-lakenumbers.svg"],
-
-  ["Brown outline", "data/all-mountainsnofill.svg"],  // Mountains
-  ["Brown fill", "data/all-mountainsbrown.svg"], // Mountains
-  ["Pink fill", "data/all-mountainspink.svg"],
-  ["Red red", "data/all-mountainsred.svg"],
-  ["Numbers", "data/all-mountainnumbers.svg"],
-
-  ["Names", "data/all-namesislandswater.svg"], // Open Water
-
-  ["Red", "data/all-namespeoplesregionsmountainsred.svg"], // Peoples, Regions
-  ["Black", "data/all-namespeoplesregionsmountainsblack.svg"],
-  
-  ["River courses", "data/all-riversoutline.svg"],
-  ["Restoration of partial erasures", "data/all-riverspartiallyerased.svg"],
-  ["Supplementary linework", "data/all-riversdecorative.svg"],
-  ["Flow direction arrows", "data/all-riverflow.svg"],
-  ["Numbers", "data/all-rivernumbers.svg"], // Rivers
-  
-  ["Route linework", "data/all-routesoutline.svg"],
-  ["Conjectural restoration of missing linework", "data/all-routesrestoriation.svg"], // Routes
-  ["Stretches with no distance figure", "data/all-routesnodistance.svg"],
-  ["Stretches with no start marked", "data/all-routesnostart.svg"],
-  ["One stretch drawn as two or more", "data/all-routestwoasone.svg"], // Other routes
-  ["Unnamed route stretches", "data/all-unnamedroutesoutline.svg"],
-  ["Unnamed route stretch numbers", "data/all-unnamedroutenumbers.svg"], // Unnamed routes
-
-  ["Numbers of isolated unnamed symbols", "data/all-isolatedsymbols.svg"], // Isolated symbols
-  ];
-
-function makeOverlayLayer(title, url) {
-  return new OpenLayers.Layer.SVG(
-                title, { 
-                visibility: false,
-                alwaysInRange: true,
-                displayInLayerSwitcher: true,
-                strategies: [new OpenLayers.Strategy.SVG()],                
-                protocol: new OpenLayers.Protocol.SVG({
-                    url: url,
-                }),
-            });
-}
+/* Mapping of SVG files to layers */
+var overlayDefs = {
+  'Grid': [
+    ["Framework", "data/all-gridlines.svg"],
+    ["Labels", "data/all-gridnumbers.svg"],
+  ],
+  'Coastline': "data/all-shoreline.svg",
+  'Island numbers': "data/all-islandnumbers.svg",
+  'Lakes': [
+    ["Areas", "data/all-lakesoutline.svg"],
+    ["Lake and marsh numbers", "data/all-lakenumbers.svg"],
+  ],
+  'Mountains': [
+    ["Brown outline", "data/all-mountainsnofill.svg"],
+    ["Brown fill", "data/all-mountainsbrown.svg"],
+    ["Pink fill", "data/all-mountainspink.svg"],
+    ["Red red", "data/all-mountainsred.svg"],
+    ["Numbers", "data/all-mountainnumbers.svg"],
+  ],
+  'Open water, lettering': "data/all-namesislandswater.svg",
+  'Names of Mountains, Peoples, Regions, display capitals': [
+    ["Red", "data/all-namespeoplesregionsmountainsred.svg"],
+    ["Black", "data/all-namespeoplesregionsmountainsblack.svg"],
+  ],
+  'Rivers': [
+    ["River courses", "data/all-riversoutline.svg"],
+    ["Restoration of partial erasures", "data/all-riverspartiallyerased.svg"],
+    ["Supplementary linework", "data/all-riversdecorative.svg"],
+    ["Flow direction arrows", "data/all-riverflow.svg"],
+    ["Numbers", "data/all-rivernumbers.svg"],
+  ],
+  'Routes': [
+    ["Route linework", "data/all-routesoutline.svg"],
+    ["Conjectural restoration of missing linework", "data/all-routesrestoriation.svg"],
+    ["Stretches with no distance figure", "data/all-routesnodistance.svg"],
+    ["Stretches with no start marked", "data/all-routesnostart.svg"],
+    ["One stretch drawn as two or more", "data/all-routestwoasone.svg"],
+    ["Unnamed route stretches", "data/all-unnamedroutesoutline.svg"],
+    ["Unnamed route stretch numbers", "data/all-unnamedroutenumbers.svg"],
+  ],
+  'Symbols': "data/all-isolatedsymbols.svg",
+};
 
 var sectionExtents = [
   [0.0, 4.533, 65.985, 50.336],
@@ -71,6 +61,19 @@ var sectionExtents = [
   [540.065, 0.0, 78.571, 60.163],
   [607.130, 1.358, 73.571, 56.335]
 ];
+
+function makeOverlayLayer(title, url) {
+  return new OpenLayers.Layer.SVG(
+                title, { 
+                visibility: false,
+                alwaysInRange: true,
+                displayInLayerSwitcher: true,
+                strategies: [new OpenLayers.Strategy.SVG()],                
+                protocol: new OpenLayers.Protocol.SVG({
+                    url: url,
+                }),
+            });
+}
 
 function moveToSection(map, n) {
   e = sectionExtents[parseInt(n)-1];
@@ -91,7 +94,6 @@ function initView(map, params) {
   if (params.z && params.l && params.xy) {
     // layers
     if (params.l.length == map.layers.length) { 
-      // this.map.events.unregister('addlayer', this, this.configureLayers);
       for(var i=0, len=params.l.length; i<len; i++) {
         var layer = map.layers[i];
         var c = params.l.charAt(i);
@@ -119,8 +121,6 @@ function initView(map, params) {
   
   map.setCenter(center, z, false, false);
 }
-
-/*Ext.onReady(function() {*/
 
 function launchViewer(w, h) {
   map = new OpenLayers.Map('map', {
@@ -161,10 +161,37 @@ function launchViewer(w, h) {
                     );
 
   layers = [base, background, s2, s1];
-  for (i=0; i<overlays.length; i++) {
-    layers.push(makeOverlayLayer(overlays[i][0], overlays[i][1]));
+
+  /* Build various GeoExt objects from the layer definitions at the top of
+     this file
+  */
+  for (var name in overlayDefs) {
+    if (overlayDefs.hasOwnProperty(name)) {
+      entry = overlayDefs[name];
+      if (typeof(entry) == "string") {
+        var layer = makeOverlayLayer(name, entry);
+        layers.push(layer);
+        stores[name] = new GeoExt.data.LayerStore({layers: [layer]});
+        tree_kids.push({text: name, nodeType: 'gx_layer', layer: layer});
+      }
+      else {
+        var group = [];
+        for (i=0; i<entry.length; i++) {
+          var layer = makeOverlayLayer(entry[i][0], entry[i][1]);
+          layers.push(layer);
+          group.push(layer);
+        }
+        stores[name] = new GeoExt.data.LayerStore({layers: group});
+        tree_kids.push({text: name, nodeType: 'gx_layercontainer', layerStore: stores[name]});
+      }
+    }
   }
-  
+
+  /* Now GeoExt objects for the non-overlay layers */
+  var n = 'Maps'
+  stores[n] = new GeoExt.data.LayerStore({layers: layers.slice(1, 4)});
+  tree_kids.push({text: n, nodeType: 'gx_layercontainer', layerStore: stores[n]});
+
   map.addLayers(layers);
   map.addControl(new OpenLayers.Control.ArgParser());
   map.addControl(new OpenLayers.Control.TPeutPermalink('permalink'));
@@ -187,7 +214,7 @@ function launchViewer(w, h) {
         width: w,
         height: h,
         x: (document.width-w)/2,
-        y: (document.height-h)/2,
+        y: $('#bd').offset().top,
         items: [
             { collapsible: true,
               // collapsed: true,
@@ -207,54 +234,8 @@ function launchViewer(w, h) {
 
   mapPanel = mapwin.items.get(1);
 
-  var k = 4; // first overlay index
-  
-  var mapstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(1, k)
-    });
-
-  var gridstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k, k+2)
-    });
-  
-  var coaststore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+2, k+3)
-    });
-
-  var islandsstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+3, k+4)
-    });
-
-  var lakesstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+4, k+6)
-    });
-
-  var mountainstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+6, k+11)
-    });
-
-  var openwaterstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+11, k+12)
-    });
-
-  var peoplesregionsstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+12, k+14)
-    });
-  
-  var riverstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+14, k+19)
-    });
-  
-  var routestore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+19, k+26)
-    });
-  
-  var isolatedsymbolsstore = new GeoExt.data.LayerStore({
-    layers: map.layers.slice(k+26, k+27)
-    });
-  
   backgroundSlider = new GeoExt.TPeutOverlayOpacitySlider({
-      layers: map.layers.slice(1, k),
+      layers: map.layers.slice(1, 4),
       aggressive: true, 
       width: 280,
       minValue: 0,
@@ -267,7 +248,7 @@ function launchViewer(w, h) {
 
   // create a separate slider bound to the map but displayed elsewhere
   overlaySlider = new GeoExt.TPeutOverlayOpacitySlider({
-      layers: map.layers.slice(k),
+      layers: map.layers.slice(4),
       aggressive: true, 
       width: 280,
       minValue: 0,
@@ -289,69 +270,11 @@ function launchViewer(w, h) {
     rootVisible: true,
     frame: false,
     loader: new Ext.tree.TreeLoader({
-      // applyLoader has to be set to false to not interfer with loaders
-      // of nodes further down the tree hierarchy
       applyLoader: false,
       }),
     root: new GeoExt.tree.LayerNode({
             expanded: true,
-            children: [
-              { // isolated symbols
-                text: "Symbols",
-                nodeType: "gx_layer",
-                layer: map.layers[30],
-                }, 
-              { // routes
-                text: "Routes",
-                nodeType: "gx_layercontainer",
-                layerStore: routestore,
-                }, 
-              { // rivers
-                text: "Rivers",
-                nodeType: "gx_layercontainer",
-                layerStore: riverstore,
-                }, 
-              { // peoples, regions
-                text: "Names of Mountains, Peoples, Regions, display capitals",
-                nodeType: "gx_layercontainer",
-                layerStore: peoplesregionsstore,
-                },
-              { // water
-                text: "Open water, lettering",
-                nodeType: "gx_layer",
-                layer: map.layers[15],
-                },
-              { // mountains
-                text: "Mountains",
-                nodeType: "gx_layercontainer",
-                layerStore: mountainstore,
-                },
-              { // lakes
-                text: "Lakes",
-                nodeType: "gx_layercontainer",
-                layerStore: lakesstore,
-                },
-              { // islands
-                text: "Island numbers",
-                nodeType: "gx_layer",
-                layer: map.layers[7],
-                }, 
-              { // coast
-                text: "Coastline",
-                nodeType: "gx_layer",
-                layer: map.layers[6],
-                }, 
-              { // grid
-                text: "Grid",
-                nodeType: "gx_layercontainer",
-                layerStore: gridstore,
-                }, 
-              { // map
-                text: "Map",
-                nodeType: "gx_layercontainer",
-                layerStore: mapstore,
-                } 
-              ]
+            children: tree_kids, 
             }),
     listeners: {
       "radiochange": function(node){
