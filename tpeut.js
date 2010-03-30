@@ -165,6 +165,9 @@ function launchViewer(w, h) {
   /* Build various GeoExt objects from the layer definitions at the top of
      this file
   */
+  tree_kids = [];
+  stores = {};
+
   for (var name in overlayDefs) {
     if (overlayDefs.hasOwnProperty(name)) {
       entry = overlayDefs[name];
