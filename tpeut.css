@@ -37,6 +37,7 @@ body {
   display: inline;
   float: left;
   width: 458px;
+  height: 350px;
   margin: 40px 10px;
   color: #333;
   background-color: #fff;
@@ -46,6 +47,7 @@ body {
   display: inline;
   float: left;
   width: 458px;
+  height: 350px;
   margin: 40px 10px;
   color: #333;
   background-color: #fff;
@@ -105,6 +107,22 @@ p {
 
 a:link, a:visited {
   color:#333; 
+}
+
+div.launch-med {
+  width: 80px;
+  height: 60px;
+  border: 1px solid green;
+  margin: 1em;
+  float: left;
+}
+
+div.launch-big {
+  width: 102px;
+  height: 77px;
+  border: 1px solid green;
+  margin 1em;
+  float: left;
 }
 
 #map-contents-wrapper {
