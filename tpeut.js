@@ -1,7 +1,7 @@
 Ext.BLANK_IMAGE_URL = '../ext-2.3.0/resources/images/default/s.gif';
 
 var layers, map, base, background, s1, s2, panel1, slider;
-var params, mapwin, mapPanel, tree;
+var mapwin, mapPanel, tree;
 var stores = {};
 var tree_kids = [];
 
@@ -85,12 +85,19 @@ function moveToSection(map, n) {
                           ));
 }
 
-function parseViewParams() {
-  params = OpenLayers.Util.getParameters();
-}
-
-function initView(map, params) {
+function initView(map) {
   var xy, center, z;
+  var params = {};
+  try {
+    var items = document.baseURI.split('?')[1].split('&');
+    for (var j=0, len = items.length; j<len; j++) {
+      var item = items[j].split('=');
+      params[item[0]] = item[1];
+    }
+  }
+  catch(e) {
+    // pass
+  }
   if (params.z && params.l && params.xy) {
     // layers
     if (params.l.length == map.layers.length) { 
@@ -108,7 +115,7 @@ function initView(map, params) {
       xy = params.xy;
     }
     else {
-      xy = params.xy.split(',');
+      xy = params.xy.split('%2C');
     }
     center = new OpenLayers.LonLat(parseFloat(xy[0]), parseFloat(xy[1]));
     z = parseInt(params.z);
@@ -289,6 +296,6 @@ function launchViewer(w, h) {
     });
 
   // initialize map view
-  initView(map, params);
+  initView(map);
 
 };
