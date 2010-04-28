@@ -21,7 +21,7 @@ var overlayDefs = {
     ["Brown outline", "data/all-mountainsnofill.svg"],
     ["Brown fill", "data/all-mountainsbrown.svg"],
     ["Pink fill", "data/all-mountainspink.svg"],
-    ["Red red", "data/all-mountainsred.svg"],
+    ["Red outline", "data/all-mountainsred.svg"],
     ["Numbers", "data/all-mountainnumbers.svg"],
   ],
   'Open water, lettering': "data/all-namesislandswater.svg",
@@ -98,7 +98,7 @@ function initView(map) {
   catch(e) {
     // pass
   }
-  if (params.z && params.l && params.xy) {
+  if (params.l) {
     // layers
     if (params.l.length == map.layers.length) { 
       for(var i=0, len=params.l.length; i<len; i++) {
@@ -111,6 +111,8 @@ function initView(map) {
         }
       }
     }
+  }
+  if (params.z && params.xy) {
     if (typeof params.xy == 'object' && params.xy.constructor == Array) {
       xy = params.xy;
     }
