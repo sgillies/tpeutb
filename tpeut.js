@@ -1,6 +1,6 @@
 Ext.BLANK_IMAGE_URL = '../ext-2.3.0/resources/images/default/s.gif';
 
-var layers, map, base, mosaic, s1, s2, panel1, slider;
+var layers, map, base, mosaic, panel1, slider;
 var mapwin, mapPanel, tree;
 var stores = {};
 var tree_kids = [];
@@ -185,7 +185,7 @@ function launchViewer(w, h) {
 
   /* Now GeoExt objects for the non-overlay layers */
   var n = 'Maps'
-  stores[n] = new GeoExt.data.LayerStore({layers: layers.slice(1, 4)});
+  stores[n] = new GeoExt.data.LayerStore({layers: layers.slice(1, 2)});
   tree_kids.push({text: n, nodeType: 'gx_layercontainer', layerStore: stores[n]});
 
   map.addLayers(layers);
