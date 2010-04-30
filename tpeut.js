@@ -1,6 +1,6 @@
 Ext.BLANK_IMAGE_URL = '../ext-2.3.0/resources/images/default/s.gif';
 
-var layers, map, base, background, s1, s2, panel1, slider;
+var layers, map, base, mosaic, s1, s2, panel1, slider;
 var mapwin, mapPanel, tree;
 var stores = {};
 var tree_kids = [];
@@ -145,31 +145,15 @@ function launchViewer(w, h) {
   	                  {isBaseLayer: true}
                     );
   
-  background = new OpenLayers.Layer.Image(
-                    'All, 50% opacity',
-                    'data/all-half-opacity.jpg',
-                    new OpenLayers.Bounds(0.0, 0.0, 681.133, 60.163),
-                    new OpenLayers.Size(5434, 480),
+  mosaic = new OpenLayers.Layer.Image(
+                    'All section, mosaicked',
+                    'data/sections-mosaic-low.jpg',
+                    new OpenLayers.Bounds(1.0, 6.0, 681.0, 57.0),
+                    new OpenLayers.Size(10880, 816),
   	                  {isBaseLayer: false, alwaysInRange: true, visibility: true}
                     );
 
-  s1 = new OpenLayers.Layer.Image(
-                    'Section 1',
-                    'data/section-01.jpg',
-                    new OpenLayers.Bounds(1.593, 8.052, 64.50, 51.401),
-                    new OpenLayers.Size(2099, 1445),
-  	                  {isBaseLayer: false, alwaysInRange: true, visibility: false}
-                    );
-
-  s2 = new OpenLayers.Layer.Image(
-                    'Section 2',
-                    'data/section-02.jpg',
-                    new OpenLayers.Bounds(57.981, 11.242, 129.006, 56.557),
-                    new OpenLayers.Size(2368, 1510),
-  	                  {isBaseLayer: false, alwaysInRange: true, visibility: false}
-                    );
-
-  layers = [base, background, s2, s1];
+  layers = [base, mosaic];
 
   /* Build various GeoExt objects from the layer definitions at the top of
      this file
