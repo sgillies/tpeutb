@@ -8,51 +8,51 @@ var tree_kids = [];
 /* Mapping of SVG files to layers */
 var overlayDefs = {
   'Grid': [
-    ["Framework", "data/all-gridlines.svg"],
-    ["Labels", "data/all-gridnumbers.svg"],
+    ["Framework", "data/gridlines.svg"],
+    ["Labels", "data/gridnumbers.svg"],
   ],
-  'Coastline': "data/all-shoreline.svg",
-  'Island numbers': "data/all-islandnumbers.svg",
+  'Coastline': "data/shoreline.svg",
+  'Island numbers': "data/islandnumbers.svg",
   'Lakes': [
-    ["Areas", "data/all-lakesoutline.svg"],
-    ["Lake and marsh numbers", "data/all-lakenumbers.svg"],
+    ["Areas", "data/lakesoutline.svg"],
+    ["Lake and marsh numbers", "data/lakenumbers.svg"],
   ],
   'Mountains': [
-    ["Brown outline", "data/all-mountainsnofill.svg"],
-    ["Brown fill", "data/all-mountainsbrown.svg"],
-    ["Pink fill", "data/all-mountainspink.svg"],
-    ["Red outline", "data/all-mountainsred.svg"],
-    ["Numbers", "data/all-mountainnumbers.svg"],
+    ["Brown outline", "data/mountainsnofill.svg"],
+    ["Brown fill", "data/mountainsbrown.svg"],
+    ["Pink fill", "data/mountainspink.svg"],
+    ["Red outline", "data/mountainsred.svg"],
+    ["Numbers", "data/mountainnumbers.svg"],
   ],
-  'Open water, lettering': "data/all-namesislandswater.svg",
+  'Open water, lettering': "data/namesislandswater.svg",
   'Names of Mountains, Peoples, Regions, display capitals': [
-    ["Red", "data/all-namespeoplesregionsmountainsred.svg"],
-    ["Black", "data/all-namespeoplesregionsmountainsblack.svg"],
+    ["Red", "data/namespeoplesregionsmountainsred.svg"],
+    ["Black", "data/namespeoplesregionsmountainsblack.svg"],
   ],
   'Rivers': [
-    ["River courses", "data/all-riversoutline.svg"],
-    ["Restoration of partial erasures", "data/all-riverspartiallyerased.svg"],
-    ["Supplementary linework", "data/all-riversdecorative.svg"],
-    ["Flow direction arrows", "data/all-riverflow.svg"],
-    ["Numbers", "data/all-rivernumbers.svg"],
+    ["River courses", "data/riversoutline.svg"],
+    ["Restoration of partial erasures", "data/riverspartiallyerased.svg"],
+    ["Supplementary linework", "data/riversdecorative.svg"],
+    ["Flow direction arrows", "data/riverflow.svg"],
+    ["Numbers", "data/rivernumbers.svg"],
   ],
   'Routes': [
-    ["Route linework", "data/all-routesoutline.svg"],
-    ["Conjectural restoration of missing linework", "data/all-routesrestoriation.svg"],
-    ["Stretches with no distance figure", "data/all-routesnodistance.svg"],
-    ["Stretches with no start marked", "data/all-routesnostart.svg"],
-    ["One stretch drawn as two or more", "data/all-routestwoasone.svg"],
-    ["Unnamed route stretches", "data/all-unnamedroutesoutline.svg"],
-    ["Unnamed route stretch numbers", "data/all-unnamedroutenumbers.svg"],
+    ["Route linework", "data/routesoutline.svg"],
+    ["Conjectural restoration of missing linework", "data/routesrestoriation.svg"],
+    ["Stretches with no distance figure", "data/routesnodistance.svg"],
+    ["Stretches with no start marked", "data/routesnostart.svg"],
+    ["One stretch drawn as two or more", "data/routestwoasone.svg"],
+    ["Unnamed route stretches", "data/unnamedroutesoutline.svg"],
+    ["Unnamed route stretch numbers", "data/unnamedroutenumbers.svg"],
   ],
-  'Symbols': "data/all-isolatedsymbols.svg",
+  'Symbols': "data/isolatedsymbols.svg",
 };
 
 var sectionExtents = [
   [0.0, 4.533, 65.985, 50.336],
   [57.184, 2.693, 71.937, 54.486],
   [118.822, 1.686, 73.293, 56.122],
-  [182.756, 2.850, 69.078, 52.894],
+  [-59.0297935, -21.3655428, 6.2932810,  23.6922875],
   [241.903, 2.099, 72.149, 53.967],
   [303.746, 3.205, 66.655, 51.039],
   [360.651, 0.735, 73.208, 55.329],
@@ -77,12 +77,12 @@ function makeOverlayLayer(title, url) {
 
 function moveToSection(map, n) {
   e = sectionExtents[parseInt(n)-1];
-  map.zoomToExtent(new OpenLayers.Bounds(
+  map.zoomToExtent(new OpenLayers.Bounds(e[0], e[1], e[2], e[3])); /*
                           e[0], 
                           map.maxExtent.top - e[3] - e[1],
                           e[0] + e[2],
                           map.maxExtent.top - e[1]
-                          ));
+                          ));*/
 }
 
 function initView(map) {
@@ -124,7 +124,7 @@ function initView(map) {
   }
   else {
     var e = sectionExtents[3];
-    center = new OpenLayers.LonLat(e[0]+e[2]/2.0, e[1]+e[3]/2.0);
+    center = new OpenLayers.LonLat(e[0], e[1], e[2], e[4]); //+e[2]/2.0, e[1]+e[3]/2.0);
     z = 6;
   }
   
@@ -134,23 +134,23 @@ function initView(map) {
 function launchViewer(w, h) {
   map = new OpenLayers.Map('map', {
               units: 'cm',
-              maxExtent: new OpenLayers.Bounds(0.0, 0.0, 681.133, 60.163)
+              maxExtent: new OpenLayers.Bounds(0.0, 0.0, 681.13281, 60.163372)
               });
   
   base = new OpenLayers.Layer.Image(
   	                  'None',
   	                  'data/base-transparent.png',
-  	                  new OpenLayers.Bounds(0.0, 0.0, 681.133, 60.163),
+  	                  new OpenLayers.Bounds(0.0, 0.0, 681.13281, 60.163372),
   	                  new OpenLayers.Size(8, 8),
   	                  {isBaseLayer: true}
                     );
   
   mosaic = new OpenLayers.Layer.Image(
                     'All section, mosaicked',
-                    'data/sections-mosaic-low.jpg',
-                    new OpenLayers.Bounds(1.0, 6.0, 681.0, 57.0),
-                    new OpenLayers.Size(10880, 816),
-  	                  {isBaseLayer: false, alwaysInRange: true, visibility: true}
+                    'data/mos-all.jpg',
+                    new OpenLayers.Bounds(3.1290, 0.8390, 676.842, 47.67137),
+                    new OpenLayers.Size(40625, 2824),
+  	                  {isBaseLayer: false, alwaysInRange: true, visibility: true, opacity: 1.0}
                     );
 
   layers = [base, mosaic];

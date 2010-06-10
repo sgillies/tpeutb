@@ -65,7 +65,12 @@ OpenLayers.Strategy.SVG = OpenLayers.Class(OpenLayers.Strategy.Fixed, {
         if (vectorRoot.lastChild) {
             vectorRoot.removeChild(vectorRoot.lastChild);
         }
-        vectorRoot.appendChild(resp.doc.lastChild.lastChild.cloneNode(true));
+        try {
+          vectorRoot.appendChild(resp.doc.lastChild.lastElementChild);
+        }
+        catch(e) {
+          vectorRoot.appendChild(resp.doc.lastChild.lastElementChild.cloneNode(true));
+        }
         this.layer.events.triggerEvent("loadend");
     },
 
