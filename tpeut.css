@@ -112,7 +112,7 @@ a:link, a:visited {
 div.launch-med {
   width: 80px;
   height: 60px;
-  border: 1px solid green;
+  background-image: url('launch-medium.png');
   margin: 1em;
   float: left;
 }
@@ -120,7 +120,7 @@ div.launch-med {
 div.launch-big {
   width: 102px;
   height: 77px;
-  border: 1px solid green;
+  background-image: url('launch-large.png');
   margin 1em;
   float: left;
 }

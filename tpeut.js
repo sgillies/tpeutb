@@ -144,11 +144,7 @@ function initView(map) {
 }
 
 function launchViewer(w, h) {
-  map = new OpenLayers.Map('map', {
-              units: 'cm',
-              maxExtent: new OpenLayers.Bounds(0.0, 0.0, 681.13281, 60.163372)
-              });
-  
+
   base = new OpenLayers.Layer.Image(
   	                  'None',
   	                  'data/base-transparent.png',
@@ -157,13 +153,33 @@ function launchViewer(w, h) {
   	                  {isBaseLayer: true}
                     );
   
-  mosaic = new OpenLayers.Layer.Image(
-                    'All section, mosaicked',
-                    'data/mos-all.jpg',
-                    new OpenLayers.Bounds(3.1290, 0.8390, 676.842, 47.67137),
-                    new OpenLayers.Size(40625, 2824),
-  	                  {isBaseLayer: false, alwaysInRange: true, visibility: true, opacity: 1.0}
-                    );
+  var metadataUrl = "http://dl-img.home.nyu.edu/adore-djatoka/resolver?url_ver=Z39.88-2004&rft_id=http://pipsqueak.atlantides.org/tpeutb/mos-all-geo.tif&svc_id=info:lanl-repo/svc/getMetadata";
+
+  var mosaic = new OpenLayers.Layer.OpenURL('All section, mosaicked',
+    "http://dl-img.home.nyu.edu/", 
+    { layername: 'basic', 
+      format: 'image/jpeg', 
+      rft_id: 'http://pipsqueak.atlantides.org/tpeutb/mos-all-geo.tif',
+      imgMetadata: {
+        identifier: "http://pipsqueak.atlantides.org/tpeutb/mos-all-geo.tif",
+        imagefile: "/data/djatoka-cache/jp2/mos-all-geo.jp2",
+        width: 40625, 
+        height: 2824, 
+        dwtLevels: 5, 
+        levels: 5, 
+        compositingLayerCount: 1 
+        },
+      maxExtent: new OpenLayers.Bounds(3.1290, 0.8390, 676.842, 47.67137),
+      tileSize: new OpenLayers.Size(256, 256),
+      metadataUrl: metadataUrl,
+      isBaseLayer: false }
+    );
+        
+  var maxExtent = new OpenLayers.Bounds(0.0, 0.0, 681.13281, 60.163372);
+  var options = {maxExtent: maxExtent, units: 'cm'};
+
+  map = new OpenLayers.Map('map', options);
+  map.tileSize = mosaic.tileSize;
 
   layers = [base, mosaic];
 
