@@ -76,6 +76,9 @@ var sectionCenters = [
   [643.4, 18.0]
 ];
 
+var DPC = 72.0/2.54;
+var RES = 1.0/60.3;
+
 function makeOverlayLayer(title, url) {
   return new OpenLayers.Layer.SVG(
                 title, { 
@@ -92,7 +95,7 @@ function makeOverlayLayer(title, url) {
 function moveToSection(map, n) {
   e = sectionCenters[parseInt(n)-1];
   center = new OpenLayers.LonLat(e[0], e[1]);
-  z = 7;
+  z = 6;
   map.setCenter(center, z, false, false);
   // map.zoomToExtent(new OpenLayers.Bounds(e[0], e[1], e[2], e[3]));
 }
@@ -137,7 +140,7 @@ function initView(map) {
   else {
     var e = sectionCenters[3];
     center = new OpenLayers.LonLat(e[0], e[1]);
-    z = 7;
+    z = 6;
   }
   
   map.setCenter(center, z, false, false);
@@ -170,13 +173,18 @@ function launchViewer(w, h) {
         compositingLayerCount: 1 
         },
       maxExtent: new OpenLayers.Bounds(3.1290, 0.8390, 676.842, 47.67137),
+      units: 'cm',
       tileSize: new OpenLayers.Size(256, 256),
       metadataUrl: metadataUrl,
       isBaseLayer: false }
     );
         
   var maxExtent = new OpenLayers.Bounds(0.0, 0.0, 681.13281, 60.163372);
-  var options = {maxExtent: maxExtent, units: 'cm'};
+  var options = {
+    minZoomLevel: 3,
+    minResolution: 72.0/2.54/60.3/60.3,
+    units: 'cm'
+    };
 
   map = new OpenLayers.Map('map', options);
   map.tileSize = mosaic.tileSize;

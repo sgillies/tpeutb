@@ -46,6 +46,9 @@ OpenLayers.Renderer.StaticSVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
      */
     isGecko: null,
 
+    /** TODO: Don't hard code this **/
+    maxExtent: new OpenLayers.Bounds(0.0, 0.0, 681.13281, 60.163372),
+
     /**
      * Constructor: OpenLayers.Renderer.SVG
      * 
@@ -105,7 +108,7 @@ OpenLayers.Renderer.StaticSVG = OpenLayers.Class(OpenLayers.Renderer.Elements, {
             this.left = left;
             this.top = top;
         }
-        var box = [extent.left, this.map.maxExtent.top - extent.top, this.map.size.w * resolution, this.map.size.h * resolution];
+        var box = [extent.left, this.maxExtent.top - extent.top, this.map.size.w * resolution, this.map.size.h * resolution];
         // var box = [extent.left, this.map.maxExtent.top - extent.top, mapPanel.el.getWidth() * resolution, mapPanel.el.getHeight() * resolution];
         var extentString = box.join(' ');
         this.rendererRoot.setAttributeNS(null, "viewBox", extentString);
