@@ -1,18 +1,23 @@
 @import url("reset-fonts-grids.css");
-@import url("../ext-2.3.0/resources/css/ext-all.css");
+@import url("ext-2.3.0/resources/css/ext-all.css");
 
 html {
   font-size: 62.5%;
   height: 100%;
-  background-color: #333;
+  background-color: #DDCEB9;
 }
 
 body {  
   font-family: 'Palatino Linotype', 'Times New Roman', Times, serif;
   font-size: 1.5em;
-  background-color: #333;
+  background-color: #DDCEB9;
   height: 100%;
 }
+
+h1, h2, #ft {
+      font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
 
 #container {
   position: relative;
@@ -25,21 +30,22 @@ body {
 
 #hd {
   height: 80px;
-  color: #fff;
+  color: black;
   padding-top: 3em;
   text-align: center;
 }
 
 #bd {
+    clear: both;
 }
 
 #left {
   display: inline;
   float: left;
   width: 458px;
-  height: 350px;
   margin: 40px 10px;
   color: #333;
+  height: 100%;
   background-color: #fff;
 }
 
@@ -47,36 +53,38 @@ body {
   display: inline;
   float: left;
   width: 458px;
-  height: 350px;
+  height: 100%;
   margin: 40px 10px;
   color: #333;
   background-color: #fff;
 }
 
 .sectionBanner {
-  background-color: #99CCFF;
-  color: #333;
-  font-family: Verdana, sans-serif;
+  background-color: #074B24;
+  color: white;
   font-weight: bold;
   padding: 1em;
-  border-left-style: solid 1px #6699CC;
-  border-top-style: solid 1px #6699CC;
-  border-right-style: solid 1px #6699CC;
-  border-bottom-style: solid 1px #6699CC;
 }
 
 .sectionContent {
   color: #333;
   padding: 1em;
-  border-left-style: solid 1px #CCC;
-  border-right-style: solid 1px #CCC;
-  border-bottom-style: solid 1px #CCC;
 }
 
+/*.sectionContent div div {
+    height: 1em;
+    border: red 1px solid;
+}*/
+
 #ft {
-  color: #fff;
+    clear: both;
+  color: black;
   text-align: center;
+  font-size: 80%;
+    padding-left: 15%;
+    padding-right: 15%;
 }
+
 
 a:link, a:visited {
   color:#333; 
@@ -84,17 +92,15 @@ a:link, a:visited {
 
 h1 {
   font-size: x-large;
-  letter-spacing: 0.15em;
 }
 
 #hd a {
-  color: #fff; 
+  color: black; 
   text-decoration: none;
 }
 
 h2 {
   font-size: large;
-  letter-spacing: 0.15em;
 }
 
 h1, h2, h3 {
@@ -121,7 +127,7 @@ div.launch-big {
   width: 102px;
   height: 77px;
   background-image: url('launch-large.png');
-  margin 1em;
+  margin: 1em;
   float: left;
 }
 

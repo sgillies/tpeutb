@@ -123,7 +123,7 @@ OpenLayers.Layer.OpenURL = OpenLayers.Class(OpenLayers.Layer.Grid, {
         var w = Math.floor(width*this.imgMetadata.width);
         return this.url + this.requestBase
           + "&svc.region=" + yoff + "," + xoff + "," +  h + "," + w
-          + "&svc.scale=256,256";
+          + "&svc.scale=192,192";
     },
 
     /**
