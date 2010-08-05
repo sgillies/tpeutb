@@ -338,3 +338,9 @@ function launchViewer(w, h) {
   initView(map);
 
 };
+
+function loaded() {
+    if (document.baseURI.indexOf('/#') > 0) {
+        launchViewer(800, 600);
+    }
+};

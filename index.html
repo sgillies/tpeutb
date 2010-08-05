@@ -5,48 +5,28 @@
   <link rel="stylesheet" href="tpeut.css" type="text/css"/>
 </head>
 
-<body>
+<body onload="loaded()">
   
   <div id="container">
     
     <div id="hd">
-          <h1><a href=".">Peutinger map: seamless whole, in color, with overlaid layers</a></h1>
+      <h1><a href=".">Peutinger map: seamless whole, in color, with overlaid layers</a></h1>
     </div><!-- end #hd -->
 
     <div id="bd">
-      
-      <div id="left">
-        <div class="sectionBanner">
-          <h2>About</h2>
-        </div>
-        <div class="sectionContent">
-          <p>This dynamic map viewer is published online as part of:</p>
-          <p>Richard J.A. Talbert, <i>Rome's World: The Peutinger Map Reconsidered</i> (Cambridge University Press, 2010).</p>
-            <p></p>
-            <p>For more information about this map, please consult the brief <a href="http://cambridge.org/us/talbert/User_Guide.pdf">User's Guide</a> (PDF). Additional resources, and information about the print components of the entire work, may be had from the <a href="http://cambridge.org/us/talbert/">Rome's World: The Peutinger Map Reconsidered</a> web page, hosted by 
-                Cambridge University Press.</p>
-            <p>This map viewer is hosted as a courtesy to the author by the <a href="http://www.nyu.edu/isaw/">Institute for the Study of the Ancient World</a> at New York University. All questions,
-                comments and inquiries should be directed to the <a
-                    href="mailto:awmc@unc.edu?subject=Talbert Peutinger Map A">Ancient World Mapping Center</a> at the University of North Carolina at Chapel Hill.</p>
-        </div>
-	    </div>
-
-      <div id="right">
-        <div class="sectionBanner">
-          <h2>View</h2>
-        </div>
-        <div class="sectionContent">
-        <p>Choose a size of viewer:</p>
-        <div>
-          <div class="launch-med" onclick="javascript:launchViewer(800, 600)">800 x 600</div>
-          
-          <div class="launch-big" onclick="javascript:launchViewer(1024, 768)">1024 x 768</div>
-          <div style="clear:both"></div>
-        </div>
-        <p>The viewer can be resized or closed after launch.</p>
-        </div>
+    
+      <div class="section">
+      <p>This dynamic map viewer is published online as part of</p>
+      <p style="text-indent: 3em;">Richard J.A. Talbert, <i>Rome's World: The Peutinger Map Reconsidered</i> (Cambridge University Press, 2010).</p>
+      <p>For more information about this map, please consult the brief <a href="http://cambridge.org/us/talbert/User_Guide.pdf">User's Guide</a> (PDF). Additional resources, and information about the print components of the entire work, may be had from the <a href="http://cambridge.org/us/talbert/">Rome's World: The Peutinger Map Reconsidered</a> web page, hosted by Cambridge University Press.</p>
+      <p>This map viewer is hosted as a courtesy to the author by the <a href="http://www.nyu.edu/isaw/">Institute for the Study of the Ancient World</a> at New York University. All questions, comments and inquiries should be directed to the 
+      <a href="mailto:awmc@unc.edu?subject=Talbert Peutinger Map A">Ancient World Mapping Center</a> at the University of North Carolina at Chapel Hill.</p>
       </div>
-      
+
+      <div class="section">
+      <p>Please launch the viewer by clicking <a href="javascript:launchViewer(800, 600)">here</a>. It may be resized or closed after launch. Bookmarkable links to any particular view or selection of layers are provided by the viewer.</p>
+      </div>
+
 	  </div><!-- end #bd -->
 
     <div id="ft">
