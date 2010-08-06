@@ -148,14 +148,8 @@ function initView(map) {
 
 function launchViewer(w, h) {
 
-  base = new OpenLayers.Layer.Image(
-  	                  'None',
-  	                  'data/base-transparent.png',
-  	                  new OpenLayers.Bounds(0.0, 0.0, 681.13281, 60.163372),
-  	                  new OpenLayers.Size(8, 8),
-  	                  {isBaseLayer: true}
-                    );
-  
+  var resolutions = [8.0*RES, 4.0*RES, 2.0*RES, 1.0*RES, 0.5*RES, 0.25*RES];
+
   var metadataUrl = "http://dl-img.home.nyu.edu/adore-djatoka/resolver?url_ver=Z39.88-2004&rft_id=http://pipsqueak.atlantides.org/tpeutv/mos-all-geo-20100712.tif&svc_id=info:lanl-repo/svc/getMetadata";
 
   var mosaic = new OpenLayers.Layer.OpenURL('All section, mosaicked',
@@ -163,22 +157,19 @@ function launchViewer(w, h) {
     { layername: 'basic', 
       format: 'image/jpeg', 
       rft_id: 'http://pipsqueak.atlantides.org/tpeutb/mos-all-geo.tif',
-      // rft_id: 'http://pipsqueak.atlantides.org/tpeutv/mos-all-geo-20100712.tif',
       imgMetadata: {
         identifier: "http://pipsqueak.atlantides.org/tpeutb/mos-all-geo.tif",
         imagefile: "/data/djatoka-cache/jp2/mos-all-geo.jp2",
-        // identifier: 'http://pipsqueak.atlantides.org/tpeutv/mos-all-geo-20100712.tif',
-        // imagefile: "/data/djatoka-cache/jp2/mos-all-geo-20100712.jp2",
         width: 43008, 
         height: 3072, 
         dwtLevels: 5, 
         levels: 5, 
         compositingLayerCount: 1 
         },
-      //maxExtent: new OpenLayers.Bounds(3.1290, 0.8390, 676.842, 47.67137),
-      maxExtent: new OpenLayers.Bounds(-16.6222, -1.2174, 696.612, 49.728),
+      // Fudge the extents slightly so we don't incur extra rows and columns of
+      // tiles. TODO: actually solve the problem.
+      maxExtent: new OpenLayers.Bounds(-16.6222, -1.2174, 696.612-4.0/3072, 49.7279-1.0/3072),
       units: 'cm',
-      // tileSize: new OpenLayers.Size(256, 256),
       tileSize: new OpenLayers.Size(192, 192),
       metadataUrl: metadataUrl,
       isBaseLayer: false }
@@ -187,9 +178,7 @@ function launchViewer(w, h) {
   var maxExtent = new OpenLayers.Bounds(0.0, 0.0, 681.13281, 60.163372);
   // var maxExtent = new OpenLayers.Bounds(-16.6222, -1.2174, 696.612, 49.728);
   var options = {
-    resolutions: [8.0*RES, 4.0*RES, 2.0*RES, 1.0*RES, 0.5*RES, 0.25*RES], //0.007796, 0.005],
-    // numZoomLevels: 3,
-    // minResolution: 72.0/2.54/60.3/60.3,
+    resolutions: resolutions,
     units: 'cm'
     };
 
@@ -202,7 +191,7 @@ function launchViewer(w, h) {
   	                  new OpenLayers.Bounds(0.0, 0.0, 681.13281, 60.163372),
   	                  new OpenLayers.Size(8, 8),
   	                  {isBaseLayer: true,
-                       resolutions: [8.0*RES, 4.0*RES, 2.0*RES, 1.0*RES, 0.5*RES, 0.25*RES],
+                       resolutions: resolutions,
                        units: 'cm'}
                     );
 

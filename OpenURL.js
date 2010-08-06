@@ -59,6 +59,10 @@ OpenLayers.Layer.OpenURL = OpenLayers.Class(OpenLayers.Layer.Grid, {
           this.imgMetadata = options.imgMetadata;
         }
 
+        var bbox = this.maxExtent;
+        this.mw = bbox.right - bbox.left;
+        this.mh = bbox.top - bbox.bottom;
+
         this.requestBase = OpenLayers.Layer.OpenURL.djatokaURL 
           + "?url_ver=" + this.url_ver 
           + "&rft_id=" + this.rft_id 
@@ -108,21 +112,16 @@ OpenLayers.Layer.OpenURL = OpenLayers.Class(OpenLayers.Layer.Grid, {
      * coordinates must be done here.
      */
     getURL: function (bounds) {  
-
         var bbox = this.maxExtent;
-        var mw = bbox.right - bbox.left;
-        var mh = bbox.top - bbox.bottom;
-
-        // SVG exttents: OpenLayers.Bounds(0.0, 0.0, 681.13281, 60.163372)
-
-        var xoff = (bounds.left - bbox.left)/mw;
-        var yoff = (bbox.top - bounds.top)/mh; // - 60.163372 + bbox.top)/mh;
-        var width = (bounds.right - bounds.left)/mw;
-        var height = (bounds.top - bounds.bottom)/mh;
-        var h = Math.floor(height*this.imgMetadata.height);
-        var w = Math.floor(width*this.imgMetadata.width);
+        var xoff = (bounds.left - bbox.left)/this.mw;
+        var yoff = (bbox.top - bounds.top)/this.mh;
+        var r = this.resolutions[this.map.zoom];
+        var h = Math.round(192.0*r*60.3);
+        yoff = Math.round(yoff*3072.0)/3072.0;
+        xoff = Math.round(xoff*3072.0)/3072.0;
         return this.url + this.requestBase
-          + "&svc.region=" + yoff + "," + xoff + "," +  h + "," + w
+          + "&svc.region=" + yoff.toFixed(12) + "," + xoff.toFixed(12) 
+          + "," +  h + "," + h
           + "&svc.scale=192,192";
     },
 
