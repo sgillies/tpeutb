@@ -166,9 +166,7 @@ function launchViewer(w, h) {
         levels: 5, 
         compositingLayerCount: 1 
         },
-      // Fudge the extents slightly so we don't incur extra rows and columns of
-      // tiles. TODO: actually solve the problem.
-      maxExtent: new OpenLayers.Bounds(-16.6222, -1.2174, 696.612-4.0/3072, 49.7279-1.0/3072),
+      maxExtent: new OpenLayers.Bounds(-16.6222, -1.2174, -16.6222 + 43008*RES, -1.2174 + 3072*RES),
       units: 'cm',
       tileSize: new OpenLayers.Size(192, 192),
       metadataUrl: metadataUrl,
@@ -176,7 +174,6 @@ function launchViewer(w, h) {
     );
         
   var maxExtent = new OpenLayers.Bounds(0.0, 0.0, 681.13281, 60.163372);
-  // var maxExtent = new OpenLayers.Bounds(-16.6222, -1.2174, 696.612, 49.728);
   var options = {
     resolutions: resolutions,
     units: 'cm'
