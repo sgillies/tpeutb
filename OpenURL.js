@@ -117,8 +117,8 @@ OpenLayers.Layer.OpenURL = OpenLayers.Class(OpenLayers.Layer.Grid, {
         var yoff = (bbox.top - bounds.top)/this.mh;
         var r = this.resolutions[this.map.zoom];
         var h = Math.round(192.0*r*60.3);
-        yoff = Math.round(yoff*3072.0)/3072.0;
-        xoff = Math.round(xoff*3072.0)/3072.0;
+        //yoff = Math.round(yoff*3072.0)/3072.0;
+        //xoff = Math.round(xoff*3072.0)/3072.0;
         return this.url + this.requestBase
           + "&svc.region=" + yoff.toFixed(12) + "," + xoff.toFixed(12) 
           + "," +  h + "," + h
