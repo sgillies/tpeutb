@@ -1,9 +1,7 @@
-/* Copyright (c) UNC Chapel Hill University Library, created by Hugh A. Cayless
- * and revised by J. Clifford Dyer.  Published under the Clear BSD licence.  
- * See http://svn.openlayers.org/trunk/openlayers/license.txt for the full 
- * text of the license. 
+/* Copyright (c) NYU Institute for the Study of the Ancient World
+ * Copyright (c) UNC Chapel Hill University Library
+ * Authors: Hugh A. Cayless, J. Clifford Dyer, Sean Gillies
  */
-
 
 /**
  * @requires OpenLayers/Layer/Grid.js
@@ -25,17 +23,26 @@ OpenLayers.Layer.OpenURL = OpenLayers.Class(OpenLayers.Layer.Grid, {
     isBaseLayer: true,
 
     /**
-     * APIProperty: tileOrigin
-     * {<OpenLayers.Pixel>}
+     * Property: extent
+     * {<OpenLayers.Bounds>} The image bounds in map units.  This extent will
+     *     also be used as the default maxExtent for the layer.  If you wish
+     *     to have a maxExtent that is different than the image extent, set the
+     *     maxExtent property of the options argument (as with any other layer).
      */
-    tileOrigin: null,
-    
+    extent: null,
+
+    /**
+     * Property: size
+     * {<OpenLayers.Size>} The image size in pixels
+     */
+    size: null,
+
+    /** Djatoka Parameters **/
     url_ver: 'Z39.88-2004',
     rft_id: null,
     svc_id: "info:lanl-repo/svc/getRegion",
     svc_val_fmt: "info:ofi/fmt:kev:mtx:jpeg2000",
     format: null,
-    tileHeight: null,
 
     /**
      * Constructor: OpenLayers.Layer.OpenURL
@@ -45,24 +52,28 @@ OpenLayers.Layer.OpenURL = OpenLayers.Class(OpenLayers.Layer.Grid, {
      * url - {String}
      * options - {Object} Hashtable of extra options to tag onto the layer
      */
-    initialize: function(name, url, options) {
+    initialize: function(name, url, rft_id, extent, size, options) {
+        this.url = url;
+        this.rft_id = rft_id;
+        this.extent = extent;
+        this.maxExtent = extent;
+        this.size = size;
+        this.format = 'image/jpeg';
+
         var newArguments = [];
         newArguments.push(name, url, {}, options);
         OpenLayers.Layer.Grid.prototype.initialize.apply(this, newArguments);
-        this.rft_id = options.rft_id;
+        
         this.format = options.format;
-        // Get image metadata if it hasn't been set
-        if (!options.imgMetadata) {
-          var request = OpenLayers.Request.issue({url: options.metadataUrl, async: false});
-          this.imgMetadata = eval('(' + request.responseText + ')');
-        } else {
-          this.imgMetadata = options.imgMetadata;
-        }
 
-        var bbox = this.maxExtent;
-        this.mw = bbox.right - bbox.left;
-        this.mh = bbox.top - bbox.bottom;
+        // Width and height in "world" units
+        this.mw = this.extent.right - this.extent.left;
+        this.mh = this.extent.top - this.extent.bottom;
 
+        // Image resolution (world units per pixel)
+        // We're constraining ourselves to square pixels here
+        this.imageResolution = this.mw/this.size.w;
+      
         this.requestBase = OpenLayers.Layer.OpenURL.djatokaURL 
           + "?url_ver=" + this.url_ver 
           + "&rft_id=" + this.rft_id 
@@ -84,16 +95,15 @@ OpenLayers.Layer.OpenURL = OpenLayers.Class(OpenLayers.Layer.Grid, {
     clone: function (obj) {
         
         if (obj == null) {
-            obj = new OpenLayers.Layer.OpenURL(this.name,
-                                           this.url,
-                                           this.options);
+            obj = new OpenLayers.Layer.OpenURL(
+                    this.name, this.url, this.rft_id, this.extent, this.size, 
+                    this.options);
         }
 
         //get all additions from superclasses
         obj = OpenLayers.Layer.Grid.prototype.clone.apply(this, [obj]);
 
         // copy/set any non-init, non-simple values here
-
         return obj;
     },    
     
@@ -112,17 +122,15 @@ OpenLayers.Layer.OpenURL = OpenLayers.Class(OpenLayers.Layer.Grid, {
      * coordinates must be done here.
      */
     getURL: function (bounds) {  
-        var bbox = this.maxExtent;
-        var xoff = (bounds.left - bbox.left)/this.mw;
-        var yoff = (bbox.top - bounds.top)/this.mh;
+        var xoff = (bounds.left - this.extent.left)/this.mw;
+        var yoff = (this.extent.top - bounds.top)/this.mh;
         var r = this.resolutions[this.map.zoom];
-        var h = Math.round(192.0*r*60.3);
-        //yoff = Math.round(yoff*3072.0)/3072.0;
-        //xoff = Math.round(xoff*3072.0)/3072.0;
+        var h = Math.round(this.tileSize.h*r/this.imageResolution);
+        var w = Math.round(this.tileSize.w*r/this.imageResolution);
         return this.url + this.requestBase
           + "&svc.region=" + yoff.toFixed(12) + "," + xoff.toFixed(12) 
-          + "," +  h + "," + h
-          + "&svc.scale=192,192";
+          + "," +  h + "," + w
+          + "&svc.scale=" + this.tileSize.h + ',' + this.tileSize.w;
     },
 
     /**

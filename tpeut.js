@@ -38,7 +38,7 @@ var overlayDefs = {
   ],
   'Routes': [
     ["Route linework", "data/routesoutline.svg"],
-    ["Conjectural restoration of missing linework", "data/routesrestoriation.svg"],
+    ["Conjectural restoration of missing linework", "data/routesrestoration.svg"],
     ["Stretches with no distance figure", "data/routesnodistance.svg"],
     ["Stretches with no start marked", "data/routesnostart.svg"],
     ["One stretch drawn as two or more", "data/routestwoasone.svg"],
@@ -150,27 +150,18 @@ function launchViewer(w, h) {
 
   var resolutions = [8.0*RES, 4.0*RES, 2.0*RES, 1.0*RES, 0.5*RES, 0.25*RES];
 
-  var metadataUrl = "http://dl-img.home.nyu.edu/adore-djatoka/resolver?url_ver=Z39.88-2004&rft_id=http://pipsqueak.atlantides.org/tpeutv/mos-all-geo-20100712.tif&svc_id=info:lanl-repo/svc/getMetadata";
-
-  var mosaic = new OpenLayers.Layer.OpenURL('All section, mosaicked',
-    "http://dl-img.home.nyu.edu/", 
-    { layername: 'basic', 
-      format: 'image/jpeg', 
-      rft_id: 'http://pipsqueak.atlantides.org/tpeutb/mos-all-geo.tif',
-      imgMetadata: {
-        identifier: "http://pipsqueak.atlantides.org/tpeutb/mos-all-geo.tif",
-        imagefile: "/data/djatoka-cache/jp2/mos-all-geo.jp2",
-        width: 43008, 
-        height: 3072, 
-        dwtLevels: 5, 
-        levels: 5, 
-        compositingLayerCount: 1 
-        },
-      maxExtent: new OpenLayers.Bounds(-16.6222, -1.2174, -16.6222 + 43008*RES, -1.2174 + 3072*RES),
+  var mosaic = new OpenLayers.Layer.OpenURL(
+    'All section, mosaicked',
+    'http://dl-img.home.nyu.edu/',
+    'http://pipsqueak.atlantides.org/tpeutb/mos-all-geo.tif',
+    new OpenLayers.Bounds(
+      -16.6222, -1.2174, -16.6222 + 43008*RES, -1.2174 + 3072*RES),
+    new OpenLayers.Size(43008, 3072),
+    { format: 'image/jpeg', 
       units: 'cm',
       tileSize: new OpenLayers.Size(192, 192),
-      metadataUrl: metadataUrl,
-      isBaseLayer: false }
+      isBaseLayer: false,
+      resolutions: resolutions }
     );
         
   var maxExtent = new OpenLayers.Bounds(0.0, 0.0, 681.13281, 60.163372);
@@ -187,10 +178,10 @@ function launchViewer(w, h) {
   	                  'data/base-transparent.png',
   	                  new OpenLayers.Bounds(0.0, 0.0, 681.13281, 60.163372),
   	                  new OpenLayers.Size(8, 8),
-  	                  {isBaseLayer: true,
-                       resolutions: resolutions,
-                       units: 'cm'}
-                    );
+  	                  { isBaseLayer: true,
+                        resolutions: resolutions,
+                        units: 'cm' }
+                      );
 
   layers = [base, mosaic];
 
