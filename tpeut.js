@@ -45,7 +45,9 @@ var overlayDefs = {
     ["Unnamed route stretches", "data/unnamedroutesoutline.svg"],
     ["Unnamed route stretch numbers", "data/unnamedroutenumbers.svg"],
   ],
-  'Symbols': "data/isolatedsymbols.svg",
+//  'Symbols': "data/isolatedsymbols.svg",
+  'Symbols: numbers for isolated unnamed symbols': "data/isolatedsymbols.svg",
+
 };
 
 var sectionExtents = [
@@ -151,7 +153,7 @@ function launchViewer(w, h) {
   var resolutions = [8.0*RES, 4.0*RES, 2.0*RES, 1.0*RES, 0.5*RES, 0.25*RES];
 
   var mosaic = new OpenLayers.Layer.OpenURL(
-    'All section, mosaicked',
+    'All section, mosaiced',
     'http://dl-img.home.nyu.edu/',
     'http://pipsqueak.atlantides.org/tpeutb/mos-all-geo.tif',
     new OpenLayers.Bounds(

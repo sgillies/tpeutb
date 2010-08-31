@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Spatially Referenced Djatoka Example</title>
+    <script type="text/javascript" src="http://openlayers.org/api/2.8/OpenLayers.js"></script>
+    <script type="text/javascript" src="OpenURL.js"></script>
+    <script type="text/javascript" src="jquery-1.3.2.min.js"></script>
+    <script type="text/javascript">
+      var map, extent, size, origin;
+      var RES = 1.0/60.3; // Centimeters per pixel
+      
+      function init() {
+        size = new OpenLayers.Size(43008, 3072);
+        origin = new OpenLayers.LonLat(-16.6222, -1.2174);
+        extent = new OpenLayers.Bounds(
+          origin.lon, origin.lat,
+          origin.lon + size.w*RES, origin.lat + size.h*RES);
+ 
+        // Zoom factors of 1/8 to 1
+        var resolutions = [
+          8.0*RES, 4.0*RES, 2.0*RES, 1.0*RES];
+
+        // At zoom level 0, the image is covered by 2 x 28 tiles
+        var tileSize = new OpenLayers.Size(192, 192);
+
+        var mosaic = new OpenLayers.Layer.OpenURL(
+          'All section, mosaicked',
+          'http://dl-img.home.nyu.edu/',
+          'http://pipsqueak.atlantides.org/tpeutb/mos-all-geo.tif',
+          extent,
+          size,
+          { format: 'image/jpeg', 
+            units: 'cm',
+            tileSize: tileSize,
+            resolutions: resolutions,
+            isBaseLayer: true }
+          );
+      
+        map = new OpenLayers.Map(
+          'map',
+          { div: 'map',
+            units: 'cm',
+            tileSize: tileSize,
+            maxExtent: extent,
+            resolutions: resolutions }
+        );
+
+        map.addControl(new OpenLayers.Control.MousePosition());
+        map.addControl(new OpenLayers.Control.Scale());
+
+        map.addLayers([mosaic]);
+        map.setCenter(new OpenLayers.LonLat((extent[2]-extent[0])/2.0, (extent[3]-extent[1])/2.0), 0);
+
+        $('#bounds').replaceWith(
+          '<span>(' 
+          + extent.left + ', '
+          + extent.bottom + ', '
+          + extent.right + ', '
+          + extent.top + ')</span>'
+          );
+        }
+    </script>
+  </head>
+  <body style="margin:4em;" onload="init();">
+    <h1>Spatially Referenced Djatoka Example</h1>
+    <p>This composite is shown in centimeter units. Its bounds are <span id="bounds">(0, 0, 0, 0)</span>.</p>
+    <div id="map" style="align:center;width:576px;height:384px;border:solid gray 1px;background-color:#cccccc;margin:1.5em;"></div>
+    <p>Imagery is Copyright &copy; Richard J. A. Talbert, 2010.
+This publication is in copyright. Subject to statutory exception and to the provisions of relevant collective licensing agreements, no reproduction of any part may take place without the written permission of Cambridge University Press.
+    
+  </body>
+</html>
+

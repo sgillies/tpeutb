@@ -128,7 +128,7 @@ OpenLayers.Layer.OpenURL = OpenLayers.Class(OpenLayers.Layer.Grid, {
         var h = Math.round(this.tileSize.h*r/this.imageResolution);
         var w = Math.round(this.tileSize.w*r/this.imageResolution);
         return this.url + this.requestBase
-          + "&svc.region=" + yoff.toFixed(12) + "," + xoff.toFixed(12) 
+          + "&svc.region=" + yoff.toFixed(7) + "," + xoff.toFixed(7) 
           + "," +  h + "," + w
           + "&svc.scale=" + this.tileSize.h + ',' + this.tileSize.w;
     },
